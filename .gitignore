@@ -1,4 +1,4 @@
-*.pdf
+
 *.aux
 *.log
 *.nav
@@ -7,3 +7,5 @@
 *.gz
 *.toc
 *.vrb
+*.fls
+*.fdb_latexmk
