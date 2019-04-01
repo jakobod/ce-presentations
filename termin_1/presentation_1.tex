@@ -1,0 +1,232 @@
+%%% Globale Einstellungen und Laden von Paketen (~Bibliotheken)
+\documentclass[aspectratio=169,presentation]{beamer}
+%\documentclass[aspectratio=169,handout]{beamer}
+
+\usetheme{Boadilla} % Bestimmt das gesamte Erscheinungsbild, die folgenden fand ich grundsätzlich ganz passend:
+% Hannover, Singapore, Malmoe, Boadilla, CambridgeUS
+
+\useinnertheme{default}
+
+% setting locales
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{lmodern}
+\usepackage[locale=DE,mode=math,list-final-separator={ oder },range-phrase={ bis },scientific-notation=false,group-digits=integer]{siunitx}
+
+% package includes
+\usepackage{tikz}
+\usetikzlibrary{positioning,automata}
+\usepackage{xcolor}
+\usepackage{listings}
+
+%listing setup
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=vhdl,
+	basicstyle=\ttfamily,
+	keywordstyle=\color{javapurple}\bfseries,
+	stringstyle=\color{javared},
+	commentstyle=\color{javagreen},
+	morecomment=[s][\color{javadocblue}]{/**}{*/},
+	tabsize=2,
+	showspaces=false,
+	showstringspaces=false
+}
+
+
+%%% (Wahrscheinlich ziemlich dreckige) Umsetzung von Spezialframes, die nur groß den Titel beinhalten
+\newcommand{\sectionframe}[1]{
+	\begin{frame}
+		\vfill
+		\Huge
+		\centering
+		\usebeamercolor[fg]{title}
+		#1
+		\vfill
+		\par
+	\end{frame}
+}
+
+
+
+%%% Zentrales Festelegen von Terminnummer und Datum
+\newcommand{\terminNummer}{2}
+\date{\today}
+%%%
+
+
+
+\begin{document}
+	\title[DT Tutorium]{Tutorium zu\\Computer-Engineering\\im SS19}
+	\subtitle{Termin \terminNummer}
+	\author[Otto]{Jakob Otto}
+	\institute{HAW Hamburg}
+	\subject{CE Tutorium}
+	\pgfdeclareimage[height=0.5cm]{university-logo}{logo-haw-2017}
+	\logo{\href{http://haw-hamburg.de}{\pgfuseimage{university-logo}}}
+	
+	\begin{frame}
+		\titlepage
+	\end{frame}
+
+%---------------------------------------------------------------------------------------------------------------------
+%	Ablauf
+%---------------------------------------------------------------------------------------------------------------------
+\section{Was steht an?}
+\begin{frame}{Ablauf}
+	\begin{columns}
+		\column{0.6\textwidth}
+		\begin{itemize}
+			\item Praktikum
+			\begin{itemize}
+				\item Praktikum Aufgabe 1
+			\end{itemize}
+		\end{itemize}
+		\column{0.4\textwidth}
+		\includegraphics[width=0.6\textwidth]{kratzen}
+	\end{columns}
+\end{frame}
+
+%---------------------------------------------------------------------------------------------------------------------
+%	Ideen für Aufgabe 1
+%---------------------------------------------------------------------------------------------------------------------
+%	- Ideen für Tick-generator zeigen
+%	- Lookup-tables ansprechen
+%	- 
+%
+%
+%
+
+\sectionframe{Aufgabenzettel}
+
+\section{UCF-Datei}
+\sectionframe{UCF-Datei}
+\begin{frame} [fragile] {kleine Wiederholung}
+	\begin{itemize}
+		\item UCF-Datei mappt ein- und Ausgänge auf pins
+		\item Format:
+		\begin{lstlisting}
+NET <port-name> LOC = <pin> | IOSTANDARD=LVCMOS33;
+		\end{lstlisting}
+		\item Als Beispiel:
+		\begin{lstlisting}
+NET "clk"		LOC = "V10" | IOSTANDARD=LVCMOS33;
+		\end{lstlisting}
+	\end{itemize}
+\end{frame}
+
+\begin{frame} [fragile] {Woher die ganzen pins?!}
+	\begin{itemize}
+		\item Normalerweise aus irgendwelchen Datenblättern..
+		\item Hier: Aus der 
+		\href{https://users.informatik.haw-hamburg.de/~behn/pub/CEP/FPGA_CE Board.pdf}{\color{red}{CE\underline{ }Board-Doku}}
+		\item Weitere Doku zum Nexys2-board gibts \href{http://users.informatik.haw-hamburg.de/~schafers/LOCAL/S19S_CE/DOCU/OLD Digilent Nexys2 Board Reference Manual.pdf}{\color{red}{HIER}}
+	\end{itemize}
+\end{frame}
+
+
+\section{Ideen zur Praktikumsaufgabe}
+\sectionframe{Ideen zur Praktikumsaufgabe}
+\begin{frame} {Tick-Generator}
+	\begin{itemize}
+		\item erzeugt ticks mit einer gewünschten Frequenz auf basis eines gegebenen Taktes
+		\item kann Frequenz nur absenken!
+		\item im Grunde zählt der Tickgenerator nur Takte\\
+		\item Ticks werden wie ein druck eines buttons interpretiert.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame} [fragile] {Tickgenerator-idee I}
+	\begin{lstlisting}
+entity TickGen is
+    port(
+        tick : out std_logic;
+        clk : in std_logic
+    );
+end entity TickGen;
+	\end{lstlisting}
+\end{frame}
+
+
+\begin{frame} [fragile] {Tickgenerator-idee II}
+	\vspace{-6mm}
+	\begin{lstlisting}
+tickGen: process (clk) is
+	constant maxValue : integer := 25000;
+	variable count : integer range 0 to maxValue := 0;
+	variable tick_v : std_logic;
+begin
+	if (rising_edge(clk)) then
+		count := count + 1;
+		if (count = maxValue) then
+			count := 0;
+			tick_v := '1';
+		else
+			tick_v := '0';
+		end if;
+	end if;
+	tick <= tick_v;
+end process tickGen;
+	\end{lstlisting}
+\end{frame}
+
+
+\begin{frame} {Auswahl der Anoden}
+	\begin{itemize}
+		\item um alle 7 Seg. Displays zu nutzen müssen die jeweiligen Anoden angesteuert werden.
+		\item Dazu nutzt ein zyklisches shiftregister!
+		\item shiftregister soll '1' mit frequenz des generierten ticks shiften.
+		\item Dadurch werden nacheinander die einzelnen Anoden durchgeschaltet.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame} [fragile]
+	\begin{lstlisting}
+shift:
+process(shiftRegister_cs) is 
+begin
+	shiftRegister_ns <= shiftRegister_cs(shiftRegister_cs'left-1 downto 0) & shiftRegister_cs(shiftRegister_cs'left); -- shift all bits to the left and add the old MSB to the right again.
+end process shift;
+	\end{lstlisting}
+	shiftregister sollte mit \grqq{}1110\grqq{} initialisiert werden!\\
+	Anode ist low-aktiv
+\end{frame}
+
+
+\begin{frame} {Lookup table}
+	\begin{itemize}
+		\item Die nibble werden mit 4 bit codiert
+		\item zum Anzeigen müssen die nibble auf die Kathodenausgänge umgesetzt werden.
+		\item Dazu ist ein lookup-table sinnvoll
+		\item Die Ausgangswerte werden dazu in einem lookup-table hinterlegt werden
+		\item $\rightarrow$ case-when!
+	\end{itemize}
+\end{frame}
+
+\begin{frame} [fragile] {Lookup table}
+	\begin{lstlisting}
+case nibVal_v is
+	when "0000" => 
+		segments_v := "10000001";
+	when "0001" => 
+		segments_v := "11001111";
+	when "0010" => 
+		segments_v := "10010010";    
+	-- usw
+end case;
+	\end{lstlisting}
+\end{frame}
+
+
+
+\end{document}
