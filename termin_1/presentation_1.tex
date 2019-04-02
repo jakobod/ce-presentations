@@ -105,7 +105,7 @@
 %
 %
 
-\sectionframe{Aufgabenzettel}
+\sectionframe{\href{http://users.informatik.haw-hamburg.de/~schafers/LOCAL/S19S_CE/Aufgabenzettel_Nr1_v15.pdf}{Aufgabenzettel}}
 
 \section{UCF-Datei}
 \sectionframe{UCF-Datei}
@@ -137,10 +137,13 @@ NET "clk"		LOC = "V10" | IOSTANDARD=LVCMOS33;
 \sectionframe{Ideen zur Praktikumsaufgabe}
 \begin{frame} {Tick-Generator}
 	\begin{itemize}
-		\item erzeugt ticks mit einer gewünschten Frequenz auf basis eines gegebenen Taktes
+		\item erzeugt ticks mit einer gewünschten Frequenz auf Basis eines gegebenen Taktes
 		\item kann Frequenz nur absenken!
 		\item im Grunde zählt der Tickgenerator nur Takte\\
-		\item Ticks werden wie ein druck eines buttons interpretiert.
+		\item Ticks werden wie ein druck eines buttons gewertet.
+		\begin{itemize}
+			 \item Enable-Signal
+		\end{itemize}
 	\end{itemize}
 \end{frame}
 
@@ -158,14 +161,13 @@ end entity TickGen;
 
 
 \begin{frame} [fragile] {Tickgenerator-idee II}
-	\vspace{-6mm}
 	\begin{lstlisting}
 tickGen: process (clk) is
-	constant maxValue : integer := 25000;
-	variable count : integer range 0 to maxValue := 0;
+	constant maxValue : integer := XXXXX;
+	variable count : integer range 0 to maxValue := 0; -- nicht gut!
 	variable tick_v : std_logic;
 begin
-	if (rising_edge(clk)) then
+	if (rising_edge(clk)) then -- geht wohl noch
 		count := count + 1;
 		if (count = maxValue) then
 			count := 0;
@@ -182,7 +184,7 @@ end process tickGen;
 
 \begin{frame} {Auswahl der Anoden}
 	\begin{itemize}
-		\item um alle 7 Seg. Displays zu nutzen müssen die jeweiligen Anoden angesteuert werden.
+		\item Die Anoden müssen zyklisch mit durschgewechselt werden
 		\item Dazu nutzt ein zyklisches shiftregister!
 		\item shiftregister soll '1' mit frequenz des generierten ticks shiften.
 		\item Dadurch werden nacheinander die einzelnen Anoden durchgeschaltet.
@@ -192,6 +194,12 @@ end process tickGen;
 
 \begin{frame} [fragile]
 	\begin{lstlisting}
+sequlo:
+process (clk) is
+begin
+	-- kennt ihr..
+end process sequlo;
+
 shift:
 process(shiftRegister_cs) is 
 begin
@@ -199,7 +207,7 @@ begin
 end process shift;
 	\end{lstlisting}
 	shiftregister sollte mit \grqq{}1110\grqq{} initialisiert werden!\\
-	Anode ist low-aktiv
+	$\rightarrow$ Anode ist low-aktiv
 \end{frame}
 
 
@@ -207,7 +215,6 @@ end process shift;
 	\begin{itemize}
 		\item Die nibble werden mit 4 bit codiert
 		\item zum Anzeigen müssen die nibble auf die Kathodenausgänge umgesetzt werden.
-		\item Dazu ist ein lookup-table sinnvoll
 		\item Die Ausgangswerte werden dazu in einem lookup-table hinterlegt werden
 		\item $\rightarrow$ case-when!
 	\end{itemize}
