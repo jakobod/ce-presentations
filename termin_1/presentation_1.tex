@@ -65,7 +65,7 @@
 
 
 \begin{document}
-	\title[DT Tutorium]{Tutorium zu\\Computer-Engineering\\im SS19}
+	\title[CE Tutorium]{Tutorium zu\\Computer-Engineering\\im SS19}
 	\subtitle{Termin \terminNummer}
 	\author[Otto]{Jakob Otto}
 	\institute{HAW Hamburg}
@@ -117,11 +117,11 @@
 		\item UCF-Datei mappt ein- und Ausgänge auf pins
 		\item Format:
 		\begin{lstlisting}
-NET <port-name> LOC = <pin> | IOSTANDARD=LVCMOS33;
+NET <port-name> LOC = <pin>;
 		\end{lstlisting}
 		\item Als Beispiel:
 		\begin{lstlisting}
-NET "clk"		LOC = "V10" | IOSTANDARD=LVCMOS33;
+NET "clk"		LOC = "V10";
 		\end{lstlisting}
 	\end{itemize}
 \end{frame}
@@ -204,9 +204,10 @@ begin
 end process sequlo;
 
 shift:
-process(shiftRegister_cs) is 
+process(rot_cs) is 
 begin
-	shiftRegister_ns <= shiftRegister_cs(shiftRegister_cs'left-1 downto 0) & shiftRegister_cs(shiftRegister_cs'left); -- shift all bits to the left and add the old MSB to the right again.
+	-- shift reg and append MSB as LSB
+	rot_ns <= rot_cs(rot_cs'left-1 downto 0) & rot_cs(rot_cs'left);
 end process shift;
 	\end{lstlisting}
 	shiftregister sollte mit \grqq{}1110\grqq{} initialisiert werden!\\
@@ -234,7 +235,10 @@ case nibVal_v is
 		segments_v := "10010010";    
 	-- usw
 end case;
+
+segments_ns <= segments_v;
 	\end{lstlisting}
+	\textbf{Wichtig:} Kathode der 7 Seg. Disp. ist low-aktiv
 \end{frame}
 
 
