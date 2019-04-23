@@ -30,7 +30,7 @@
 \definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
 \definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
 
-\lstset{language=vhdl,
+\lstset{language=c,
 	basicstyle=\ttfamily,
 	keywordstyle=\color{javapurple}\bfseries,
 	stringstyle=\color{javared},
@@ -126,6 +126,19 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame} [fragile] {Wie Umformen?}
+  \begin{itemize}
+    \item Samples z.B. in +1V/-1V Format speichern
+    \item Beim nutzen dann teilen
+  \end{itemize}
+  \begin{lstlisting}
+// darstellung +1V/-1V
+fifo[index] = samples[sampleIndex] + offset;
+// Darstellung +0.5V/-0.5V
+fifo[index] = (samples[sampleIndex] >> 1) + offset;
+  \end{lstlisting}
+\end{frame}
+
 \sectionframe{Berechnungsbeispiel}
 
 \begin{frame} {Berechnung der Schrittweite}
@@ -140,7 +153,7 @@
   frac = fractional Anteil des Q-Formats
 \end{frame}
 
-\begin{frame} {Schrittweite}
+\begin{frame} {Schrittweite $\rightarrow$ Q-Format?!}
   Für höchste genauigkeit Q-Format nutzen!\\
   \vspace{0.5cm}
   \pause
