@@ -1,0 +1,153 @@
+%%% Globale Einstellungen und Laden von Paketen (~Bibliotheken)
+\documentclass[aspectratio=169,presentation]{beamer}
+%\documentclass[aspectratio=169,handout]{beamer}
+
+\usetheme{Boadilla} % Bestimmt das gesamte Erscheinungsbild, die folgenden fand ich grundsätzlich ganz passend:
+% Hannover, Singapore, Malmoe, Boadilla, CambridgeUS
+
+\useinnertheme{default}
+
+% setting locales
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{lmodern}
+\usepackage[locale=DE,mode=math,list-final-separator={ oder },range-phrase={ bis },scientific-notation=false,group-digits=integer]{siunitx}
+
+% package includes
+\usepackage{tikz}
+\usetikzlibrary{positioning,automata}
+\usepackage{xcolor}
+\usepackage{listings}
+
+%listing setup
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=vhdl,
+	basicstyle=\ttfamily,
+	keywordstyle=\color{javapurple}\bfseries,
+	stringstyle=\color{javared},
+	commentstyle=\color{javagreen},
+	morecomment=[s][\color{javadocblue}]{/**}{*/},
+	tabsize=2,
+	showspaces=false,
+	showstringspaces=false
+}
+
+
+%%% (Wahrscheinlich ziemlich dreckige) Umsetzung von Spezialframes, die nur groß den Titel beinhalten
+\newcommand{\sectionframe}[1]{
+	\begin{frame}
+		\vfill
+		\Huge
+		\centering
+		\usebeamercolor[fg]{title}
+		#1
+		\vfill
+		\par
+	\end{frame}
+}
+
+
+
+%%% Zentrales Festelegen von Terminnummer und Datum
+\newcommand{\terminNummer}{4}
+\date{\today}
+%%%
+
+
+
+\begin{document}
+\title[CE Tutorium]{Tutorium zu\\Computer-Engineering\\im SS19}
+\subtitle{Termin \terminNummer}
+\author[Otto]{Jakob Otto}
+\institute{HAW Hamburg}
+\subject{CE Tutorium}
+\pgfdeclareimage[height=0.5cm]{university-logo}{logo-haw-2017}
+\logo{\href{http://haw-hamburg.de}{\pgfuseimage{university-logo}}}
+
+\titlepage
+
+%---------------------------------------------------------------------------------------------------------------------
+%	Ablauf
+%---------------------------------------------------------------------------------------------------------------------
+\section{Was steht an?}
+\begin{frame}{Ablauf}
+	\begin{columns}
+		\column{0.6\textwidth}
+		\begin{itemize}
+			\item Praktikum
+      \begin{itemize}
+        \item Was ist zu tun?
+        \item Was braucht ihr?
+        \item Beispielcode
+				\item Tipps
+			\end{itemize}
+		\end{itemize}
+		\column{0.4\textwidth}
+		\includegraphics[width=0.6\textwidth]{kratzen}
+	\end{columns}
+\end{frame}
+
+%---------------------------------------------------------------------------------------------------------------------
+%	Ideen für Aufgabe 1
+%---------------------------------------------------------------------------------------------------------------------
+%	- Trial-subtraction verfahren
+
+
+\sectionframe{\href{http://users.informatik.haw-hamburg.de/~schafers/LOCAL/S19S_CE/Aufgabenzettel_Nr3_v06_Entwurf.pdf}{Aufgabenzettel}}
+
+\begin{frame} {Was ist zu tun?}
+  \begin{itemize}
+    \item DAC verstehen!
+    \item Sinus/Sägezahnsignale ausgeben
+    \item verschiedene Frequenzen darstellen
+    \item verschiedene Amplituden darstellen
+  \end{itemize}
+\end{frame}
+
+% Beispielcode
+\sectionframe{\href{https://users.informatik.haw-hamburg.de/~schafers/LOCAL/S19S_CE/CODE/DemoForLabA3_Curve/main.c}{Beispielcode}}
+
+\begin{frame} {Wie kommt ihr an Samples?!}
+  Für die Lookup-tables braucht ihr Samples.
+  \begin{itemize}
+    \item volle Periode des Signals berechnen
+    \item Samples in einem Array hard-coden
+    \item Am besten ohne Offset speichern $\rightarrow$ Signal sollte um 0-pkt laufen.
+    \item erst beim nutzen geeignet umformen. 
+  \end{itemize}
+\end{frame}
+
+\sectionframe{Berechnungsbeispiel}
+
+\begin{frame} {Berechnung der Schrittweite}
+  Zum Darstellen verschiedener Frequenzen benötigt ihr verschiedene Schrittweiten.
+  \begin{itemize}
+    \item kleine Schrittweite $\rightarrow$ kleine Frequenz
+    \item große Schrittweite $\rightarrow$ große Frequenz
+  \end{itemize}
+  \vspace{0.5cm}
+  Berechnung:\\
+  $delta_{freq} = ((((ANZ\_SAMPLES) * FREQ) << frac) / TIMER\_FREQ)$\\
+  frac = fractional Anteil des Q-Formats
+\end{frame}
+
+\begin{frame} {Schrittweite}
+  Für höchste genauigkeit Q-Format nutzen!\\
+  \vspace{0.5cm}
+  \pause
+  Bei 360 samples brauchen wir 9 Integer-bits $\rightarrow$ $2^9 = 512$ \\
+  \vspace{0.5cm}
+  Qu9.23 ist also sinnvolles Format
+\end{frame}
+
+
+\end{document}

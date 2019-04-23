@@ -1,0 +1,241 @@
+###
+### .gitignore demo for TI4 CE SS16
+### ===============================
+###
+### v10  150408  by Michael Schäfers
+###
+
+
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# untracked files:
+#=================
+
+# exclude the very synchronize script (respectively "check-in" script), since problems might occur, if synchronize script checks itself in (synchronize was named check-in before)
+synchronizeWithOriginMasterBranch.bash
+check-in
+
+
+# exclude annoying stuff from OS
+# ==============================
+#
+# DOSe
+System\ Volume\ Information
+**/Thumbs.db
+**/*.swp
+#
+# Mac OS X
+**/.DS_Store
+
+
+# exclude just everything - only the wanted stuff is included afterwards by !....
+*
+
+
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# except / tracked files: -> !...
+#================================
+
+# include GIT related files
+!.gitignore
+
+
+# include project description related files
+!readme.md
+!ReadMe.txt
+
+
+# include VHDL source code
+!*.vhd
+
+
+# include ISE related files  (they have to copied by hand to GIT root folder resp. this position)
+!*.ucf
+!*.sdf
+
+
+
+# include ModelSim related script files
+# unfortunately the following wont work as a result of excluding just everything before
+# !mose*_v*/**/*.do
+# !mose*_v*/**/*.tcl
+# hence:
+#
+!mose10x[345][abcdefghijk]_v[123456789]/
+mose10x[345][abcdefghijk]_v[123456789]/*
+!mose10x[345][abcdefghijk]_v[123456789]/*.do
+!mose10x[345][abcdefghijk]_v[123456789]/*.tcl
+
+
+
+# include CEPtemplate stuff
+# unfortunately the following wont work as a result of excluding just everything before
+# !CEPtemplate/**/*.[chs]
+# hence:
+#
+#
+!CEPtemplate/
+CEPtemplate/*
+!CEPtemplate/*.[chs]
+#
+!Libraries/
+Libraries/*
+!Libraries/*.[chs]
+#
+!Libraries/CMSIS/
+Libraries/CMSIS/*
+!Libraries/CMSIS/*.[chs]
+#
+!Libraries/CMSIS/CM3/
+Libraries/CMSIS/CM3/*
+!Libraries/CMSIS/CM3/*.[chs]
+#
+!Libraries/CMSIS/CM3/CoreSupport/
+Libraries/CMSIS/CM3/CoreSupport/*
+!Libraries/CMSIS/CM3/CoreSupport/*.[chs]
+#
+!Libraries/CMSIS/CM3/DeviceSupport/
+Libraries/CMSIS/CM3/DeviceSupport/*
+!Libraries/CMSIS/CM3/DeviceSupport/*.[chs]
+#
+!Libraries/CMSIS/CM3/DeviceSupport/ST/
+Libraries/CMSIS/CM3/DeviceSupport/ST/*
+!Libraries/CMSIS/CM3/DeviceSupport/ST/*.[chs]
+#
+!Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/
+Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/*
+!Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/*.[chs]
+#
+!Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/startup/
+Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/startup/*
+!Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/startup/*.[chs]
+#
+!Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/startup/arm/
+Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/startup/arm/*
+!Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/startup/arm/*.[chs]
+#
+!Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/startup/gcc_ride7/
+Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/startup/gcc_ride7/*
+!Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/startup/gcc_ride7/*.[chs]
+#
+!Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/startup/iar/
+Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/startup/iar/*
+!Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/startup/iar/*.[chs]
+#
+!Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/startup/TrueSTUDIO/
+Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/startup/TrueSTUDIO/*
+!Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F2xx/startup/TrueSTUDIO/*.[chs]
+#
+!Libraries/Device/
+Libraries/Device/*
+!Libraries/Device/*.[chs]
+#
+!Libraries/StdPeriph_Driver/
+Libraries/StdPeriph_Driver/*
+!Libraries/StdPeriph_Driver/*.[chs]
+#
+!Libraries/StdPeriph_Driver/inc/
+Libraries/StdPeriph_Driver/inc/*
+!Libraries/StdPeriph_Driver/inc/*.[chs]
+#
+!Libraries/StdPeriph_Driver/src/
+Libraries/StdPeriph_Driver/src/*
+!Libraries/StdPeriph_Driver/src/*.[chs]
+#
+!Libraries/StdPeriph_Driver/templates/
+Libraries/StdPeriph_Driver/templates/*
+!Libraries/StdPeriph_Driver/templates/*.[chs]
+#
+!Libraries/TiLib/
+Libraries/TiLib/*
+!Libraries/TiLib/*.[chs]
+#
+!Project/
+Project/*
+!Project/*.[chs]
+!Project.uvproj
+!Project.uvopt
+
+
+
+
+
+#VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+#
+# => only the listed exceptions in the current directory are checked in
+#
+# "!.gitignore"
+#     including ".gitignore" results in same (git-)behavior everywhere - is this wanted?
+#
+# "*" 
+#     excludes everything - unfortunately it is NOT supported to (re)include a (sub-)directory afterwards (2014/10/15)
+#
+#     but, you can type directly in GIT bash e.g.:
+#     "git add --force CEPtemplate/Project/*.h"
+#     "git add --force CEPtemplate/Project/*.c"
+#
+#
+#
+# see:
+#
+# http://git-scm.com/docs/gitignore
+#
+# http://stackoverflow.com/questions/6919121/why-are-there-2-ways-to-unstage-a-file-in-git
+# git rm --cached
+# git reset HEAD file
+#
+# http://stackoverflow.com/questions/12191254/gitignore-continue-to-track-file-after-adding-it-once-by-force#
+#
+#
+#
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# Checklist of file that might be checked in
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+#
+# C related
+# =========
+# *.c       source code
+# *.h       source code / header file
+# *.s       source code ( assembler )
+#
+#
+# ISE (Integrated Synthesis Environment) related
+# ==============================================
+# *.cdc     Chipscope Definition and Connection file
+# *.cpj     Chipscope ProJect file
+# *.sdf     Standard Delay Format file
+# *.ucf     User Constraint File
+#
+#
+# ModelSim related
+# ================
+# *.do      ModelSim xommad/batch file(s) - e.g. wave.do
+# *.tcl     Tool Command Language file
+#
+#
+# VHDL related
+# ============
+# *.vhd     source code
+#
+#
+#
+#
+#
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#
+# "System Volume Information"  <=>  System\ Volume\ Information
+#
+# "System Volume Information"   seems to be NOT documented
+# System\ Volume\ Information   is documented
+#
+#
