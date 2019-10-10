@@ -16,9 +16,11 @@
 
 % package includes
 \usepackage{tikz}
-\usetikzlibrary{positioning,automata}
+\usetikzlibrary{positioning,automata,matrix,arrows.meta,fit}
 \usepackage{xcolor}
 \usepackage{listings}
+\usepackage{graphicx} % Required for including images
+\usepackage[font=small,labelfont=bf]{caption} % Required for specifying captions to tables and figures
 
 %listing setup
 \definecolor{pblue}{rgb}{0.13,0.13,1}
@@ -55,22 +57,40 @@
 	\end{frame}
 }
 
-
-
 %%% Zentrales Festelegen von Terminnummer und Datum
-\newcommand{\terminNummer}{2}
+\newcommand{\terminNummer}{1}
 \date{\today}
 %%%
 
+\newcommand{\externalLink}{%
+    \tikz[x=1.2ex, y=1.2ex, baseline=-0.05ex]{% 
+        \begin{scope}[x=1ex, y=1ex]
+            \clip (-0.1,-0.1) 
+                --++ (-0, 1.2) 
+                --++ (0.6, 0) 
+                --++ (0, -0.6) 
+                --++ (0.6, 0) 
+                --++ (0, -1);
+            \path[draw, 
+                line width = 0.5, 
+                rounded corners=0.5] 
+                (0,0) rectangle (1,1);
+        \end{scope}
+        \path[draw, line width = 0.5] (0.5, 0.5) 
+            -- (1, 1);
+        \path[draw, line width = 0.5] (0.6, 1) 
+            -- (1, 1) -- (1, 0.6);
+        }
+    }
 
 
 \begin{document}
-	\title[CE Tutorium]{Tutorium zu\\Computer-Engineering\\im SS19}
+	\title[CE Tutorium]{Tutorium zu\\Computer-Engineering\\im WS19}
 	\subtitle{Termin \terminNummer}
 	\author[Otto]{Jakob Otto}
 	\institute{HAW Hamburg}
 	\subject{CE Tutorium}
-	\pgfdeclareimage[height=0.5cm]{university-logo}{logo-haw-2017}
+	\pgfdeclareimage[height=0.5cm]{university-logo}{figs/logo-haw-2017}
 	\logo{\href{http://haw-hamburg.de}{\pgfuseimage{university-logo}}}
 	
 	\begin{frame}
@@ -80,97 +100,256 @@
 %---------------------------------------------------------------------------------------------------------------------
 %	Ablauf
 %---------------------------------------------------------------------------------------------------------------------
-\section{Was steht an?}
+\section{Ablauf}
 \begin{frame}{Ablauf}
 	\begin{columns}
-		\column{0.6\textwidth}
-		\begin{itemize}
-			\item Praktikum
-			\begin{itemize}
-				\item wdh. UCF-Files
-				\item tick-generator
-				\item shiftregister
-				\item lookup table
-			\end{itemize}
-		\end{itemize}
-		\column{0.4\textwidth}
-		\includegraphics[width=0.6\textwidth]{kratzen}
+    \column{0.4\textwidth}
+    \begin{itemize}
+      \item Begrüßung
+      \begin{itemize}
+        \item Wer bin ich?
+        \item Was stelle ich mir vor?
+        \item Was stellt ihr euch vor?
+      \end{itemize}
+      \item Kurze Wiederholung
+      \item Praktikum
+      \begin{itemize}
+        \item 7-Segment-Display
+        \item Shiftregister
+        \item Tick-generator
+        \item Lookup table
+      \end{itemize}
+
+    \end{itemize}
+    \column{0.6\textwidth}
+      \begin{center}
+        \includegraphics[width=.6\textwidth]{figs/kratzen}
+      \end{center}
 	\end{columns}
 \end{frame}
 
-%---------------------------------------------------------------------------------------------------------------------
-%	Ideen für Aufgabe 1
-%---------------------------------------------------------------------------------------------------------------------
-%	- Ideen für Tick-generator zeigen
-%	- Lookup-tables ansprechen
-%	- 
-%
-%
-%
+%-------------------------------------------------------------------------------
+%	Begrüßung
+%-------------------------------------------------------------------------------
 
-\sectionframe{\href{http://users.informatik.haw-hamburg.de/~schafers/LOCAL/S19S_CE/Aufgabenzettel_Nr1_v15.pdf}{Aufgabenzettel}}
+\section{Begrüßung}
+\begin{frame} {Wer bin ich eigentlich?}
+  \begin{columns}
+    \column{0.6\textwidth}
+      \begin{itemize}
+        \item Jakob Otto
+        \item Gerade dabei den Bachelor zu schreiben
+        \item C++, Internet, Distributed Systems
+        \item Entsprechend oft bei der Inet-Group zu finden
+      \end{itemize}
+    \column{0.4\textwidth}
+      \begin{center}
+        \href{https://inet.haw-hamburg.de}{\includegraphics[width=.4\textwidth]{figs/inet_logo.png}\externalLink}
+      \end{center}
+      \begin{center}
+        \href{https://actor-framework.org}{\includegraphics[width=.4\textwidth]{figs/caf_logo.png}\externalLink}
+      \end{center}
+  \end{columns}
+\end{frame}
 
-\section{UCF-Datei}
-\sectionframe{UCF-Datei}
-\begin{frame} [fragile] {kleine Wiederholung}
-	\begin{itemize}
-		\item UCF-Datei mappt ein- und Ausgänge auf pins
-		\item Format:
-		\begin{lstlisting}
+\begin{frame} {Meine Vorstellung fürs Tutorium}
+  \begin{block} {Meine Ziele sind}
+    \begin{itemize}
+      \item Euch durchs Praktikum zu bringen
+      \item Verständnisfragen klären
+      \item Persönliche Hilfe anbieten
+    \end{itemize}
+  \end{block}
+  \begin{exampleblock} {No worries.}
+    Frontalvorträge sind nicht meins
+  \end{exampleblock}
+\end{frame}
+
+\sectionframe{Was wollt ihr??}
+
+%-------------------------------------------------------------------------------
+%	Praktkumsaufgabe
+%-------------------------------------------------------------------------------
+
+\sectionframe{\href{https://users.informatik.haw-hamburg.de/~schafers/LOCAL/S19W_CE/Aufgabenzettel_Nr1_v18.pdf}{Aufgabenzettel \externalLink}}
+
+%-------------------------------------------------------------------------------
+%	Kurze Wiederholung UCF
+%-------------------------------------------------------------------------------
+
+\section{Kurze Wiederholung}
+\begin{frame} [fragile] {kurze Wiederholung (UCF)}
+  \begin{block} {UCF-File}
+    \begin{itemize}
+      \item mappt ein- und Ausgänge auf pins
+      \item Format:
+      \begin{lstlisting}
 NET <port-name> LOC = <pin>;
-		\end{lstlisting}
-		\item Als Beispiel:
-		\begin{lstlisting}
+      \end{lstlisting}
+      \item Als Beispiel:
+      \begin{lstlisting}
 NET "clk"		LOC = "V10";
-		\end{lstlisting}
-	\end{itemize}
+      \end{lstlisting}
+    \end{itemize}
+  \end{block}
 \end{frame}
 
-\begin{frame} [fragile] {Woher die ganzen pins?!}
-	\begin{itemize}
-		\item Normalerweise aus irgendwelchen Datenblättern..
-		\item Hier: Aus der 
-		\href{https://users.informatik.haw-hamburg.de/~behn/pub/CEP/FPGA_CE Board.pdf}{\color{red}{CE\underline{ }Board-Doku}}
-		\item Weitere Doku zum Nexys2-board gibts \href{http://users.informatik.haw-hamburg.de/~schafers/LOCAL/S19S_CE/DOCU/OLD Digilent Nexys2 Board Reference Manual.pdf}{\color{red}{HIER}}
-	\end{itemize}
+\begin{frame} [fragile] {Woher die Infos?}
+  \begin{block} {}
+    \begin{itemize}
+      \item Normalerweise aus irgendwelchen Datenblättern..
+      \item Hier: Aus der 
+            \href{https://users.informatik.haw-hamburg.de/~behn/pub/CEP/FPGA_CE Board.pdf}{\color{red}{CE\underline{ }Board-Doku \externalLink}}
+      \item Weitere Doku zum Nexys2-board gibts 
+            \href{http://users.informatik.haw-hamburg.de/~schafers/LOCAL/S19S_CE/DOCU/OLD Digilent Nexys2 Board Reference Manual.pdf}{\color{red}{hier \externalLink}}
+    \end{itemize}
+  \end{block}
 \end{frame}
 
+% LOOKUPTABLE ENTWEDER ALS ERSTES, ODER ALS LETZTES MAL SEHEN.
 
-\section{Ideen zur Praktikumsaufgabe}
-\sectionframe{Ideen zur Praktikumsaufgabe}
-\begin{frame} {Tick-Generator}
-	\begin{itemize}
-		\item erzeugt ticks mit einer gewünschten Frequenz auf Basis eines gegebenen Taktes
-		\item kann Frequenz nur absenken!
-		\item im Grunde zählt der Tickgenerator nur Takte\\
-		\item Ticks werden wie ein druck eines buttons gewertet.
-		\begin{itemize}
-			 \item Enable-Signal
-		\end{itemize}
-	\end{itemize}
+%-------------------------------------------------------------------------------
+%	Sieben-Segment-Display
+%-------------------------------------------------------------------------------
+
+\begin{frame} {Sieben-Segment Display (I)}
+  \begin{block} {Besonderheiten bei unserem Package}
+    \begin{itemize}
+      \item Individelle Anoden
+      \item Gemeinsame Kathode
+    \end{itemize}
+  \end{block}
 \end{frame}
 
+\section{7-Segment Display}
+\begin{frame} {Sieben-Segment Display (II)}
+    \begin{center}
+      \includegraphics[width=0.8\textwidth]{figs/7seg_display.png}
+    \end{center}
+\end{frame}
 
-\begin{frame} [fragile] {Tickgenerator-idee I}
+%-------------------------------------------------------------------------------
+%	Shiftregister
+%-------------------------------------------------------------------------------
+
+\section{Shiftregister}
+\begin{frame} {Shiftregister (I)}
+  \begin{block} {Verschiedene Zahlen Anzeigen}
+    \begin{itemize}
+      \item Anoden müssen zyklisch angewählt werden
+      \item Zyklisches-Shiftregister passt
+      \item Dadurch werden nacheinander die einzelnen Anoden durchgeschaltet.
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame} [fragile] {Shiftregister (II)}
+  \begin{center}
+    \begin{tikzpicture}[>=Stealth,
+      scale=2,
+      font=\ttfamily,
+      bits/.style={draw, minimum size=14mm},
+      register/.style={matrix of nodes,nodes={bits},
+      column sep=-\pgflinewidth, 
+      row sep=0.5mm, nodes in empty cells,
+      row 1/.style={nodes={draw=none, minimum size=1cm}},
+      }]
+      
+      \matrix[register, label=below:RLA] (RLA) {
+      3 & 2 & 1 & 0\\
+      |(3)|&|(2)|&|(1)|&|(0)|\\};
+      
+      \foreach \i in {0,...,3}
+          \draw[->] ([xshift=1mm]\i.east)--++(180:4mm);
+      \draw[->] (3.west)--++(180:3mm);
+      \draw (3.west)--++(180:1cm)|-(RLA.north)-|([xshift=1cm]0.east)--(0.east);
+    \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+\begin{frame} [fragile] {Shiftregister (III)}
+	\begin{lstlisting}
+sequlo:
+process (clk) is
+begin
+	-- ...
+end process sequlo;
+
+shift:
+process(rot_cs) is 
+begin
+	-- shift reg and append MSB as LSB
+	reg_ns <= reg_cs(reg_cs'left-1 downto 0) & reg_cs(reg_cs'left);
+end process shift;
+  \end{lstlisting}
+  
+  \begin{alertblock} {}
+    shiftregister sollte mit \grqq{}1110\grqq{} initialisiert werden!\\
+	  $\rightarrow$ Anode ist low-aktiv
+  \end{alertblock}
+\end{frame}
+
+%-------------------------------------------------------------------------------
+%	Tickgenerator
+%-------------------------------------------------------------------------------
+
+\section{Tick-Generator}
+\begin{frame} {Tick-Generator (I)}
+  \begin{exampleblock} {Tick?}
+    Ein Tick ist ein enable Signal $\Leftrightarrow$ druck eines buttons\\
+    Signal ist genau 1 Takt lang '1'/HIGH -- Sonst '0'/LOW
+  \end{exampleblock}
+  \begin{block} {Was tut er?}
+    \begin{itemize}
+      \item Emittiert ticks mit gewünschter (kleinerer) Frequenz als clk-Takt
+      \item Frequenz kann nur gesenkt werden
+      \item Zählt im wesentlichen Takte
+      \begin{itemize}
+        \item Bei maxValue wird ein Tick emittiert
+      \end{itemize}
+      \item Ticks druck eines buttons gewertet.
+      \begin{itemize}
+        \item Enable-Signal 
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame} {Tick-Generator (II)}
+  \begin{block} {Warum Interessiert uns das?}
+    \begin{itemize}
+      \item 7-Segment Display geben refresh-rate vor
+      \begin{itemize}
+        \item 1ms to 16ms
+        \item !!Für ganze Anzeige!!
+      \end{itemize}
+      \item Systemtakt muss runtergeteilt werden
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame} [fragile] {Tick-Generator (II)}
 	\begin{lstlisting}
 entity TickGen is
-    port(
-        tick : out std_logic;
-        clk : in std_logic
-    );
+  port(
+    tick : out std_logic;
+    clk : in std_logic
+  );
 end entity TickGen;
-	\end{lstlisting}
+  \end{lstlisting}
+  \begin{alertblock} {}
+    Denkt an vernünftiges Takten von ein/Ausgängen.
+  \end{alertblock}
 \end{frame}
 
-
-\begin{frame} [fragile] {Tickgenerator-idee II}
+\begin{frame} [fragile] {Tick-Generator (IV)}
 	\begin{lstlisting}
 tickGen: process (clk) is
 	constant maxValue : integer := XXXXX;
-	variable count : integer range 0 to maxValue := 0; -- nicht gut!
+	variable count : integer range 0 to maxValue := 0; -- NEIN!
 	variable tick_v : std_logic;
 begin
-	if (rising_edge(clk)) then -- geht wohl noch
+	if (rising_edge(clk)) then -- MHHH...
 		count := count + 1;
 		if (count = maxValue) then
 			count := 0;
@@ -184,47 +363,48 @@ end process tickGen;
 	\end{lstlisting}
 \end{frame}
 
-
-\begin{frame} {Auswahl der Anoden}
-	\begin{itemize}
-		\item Die Anoden müssen zyklisch mit durschgewechselt werden
-		\item Dazu nutzt ein zyklisches shiftregister!
-		\item shiftregister soll '1' mit frequenz des generierten ticks shiften.
-		\item Dadurch werden nacheinander die einzelnen Anoden durchgeschaltet.
-	\end{itemize}
+\begin{frame} {Tick-Generator (V)}
+  \begin{alertblock} {Disclaimer}
+    Der Code zum Tickgenerator ist nur zum Verständnis gedacht und wird wohl so 
+    nicht von Schäfers akzeptiert.
+  \end{alertblock}
 \end{frame}
 
+%-------------------------------------------------------------------------------
+% Lookup table
+%-------------------------------------------------------------------------------
 
-\begin{frame} [fragile]
-	\begin{lstlisting}
-sequlo:
-process (clk) is
-begin
-	-- kennt ihr..
-end process sequlo;
+\section{Lookuptable}
+\begin{frame} {Lookuptable (I)}
+  \begin{exampleblock} {Nibble?}
+    Ein Nibble sind 4 bit $\Leftrightarrow$ 16 Verschiedene Werte.
+  \end{exampleblock}
 
-shift:
-process(rot_cs) is 
-begin
-	-- shift reg and append MSB as LSB
-	rot_ns <= rot_cs(rot_cs'left-1 downto 0) & rot_cs(rot_cs'left);
-end process shift;
-	\end{lstlisting}
-	shiftregister sollte mit \grqq{}1110\grqq{} initialisiert werden!\\
-	$\rightarrow$ Anode ist low-aktiv
+  \begin{block} {Werte darstellen?}
+    \begin{itemize}
+      \item Pro 7-Segment-Display eine Hex-Ziffer ($\rightarrow$ 1 nibble)
+      \item Konvertierung notwendig von Nibble $\rightarrow$ 7 Kathoden
+      \item Zielwerte für Kathoden in Lookuptable speichern
+      \item $\rightarrow$ \textbf{case-when!}
+    \end{itemize}
+  \end{block}
 \end{frame}
 
-
-\begin{frame} {Lookup table}
-	\begin{itemize}
-		\item Die nibble werden mit 4 bit codiert
-		\item zum Anzeigen müssen die nibble auf die Kathodenausgänge umgesetzt werden.
-		\item Die Ausgangswerte werden dazu in einem lookup-table hinterlegt werden
-		\item $\rightarrow$ case-when!
-	\end{itemize}
+\begin{frame} {Lookuptable (II)}
+	\begin{columns}
+    \column{0.5\textwidth}
+      \begin{center}
+        \includegraphics[width=\textwidth]{figs/bcd_7seg.png}
+        \captionof*{figure}{Hierum gehts}
+      \end{center}
+    \column{0.5\textwidth}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/7seg_package.png}
+    \end{center}
+	\end{columns}
 \end{frame}
 
-\begin{frame} [fragile] {Lookup table}
+\begin{frame} [fragile] {Lookuptable (III)}
 	\begin{lstlisting}
 case nibVal_v is
 	when "0000" => 
@@ -237,10 +417,32 @@ case nibVal_v is
 end case;
 
 segments_ns <= segments_v;
-	\end{lstlisting}
-	\textbf{Wichtig:} Kathode der 7 Seg. Disp. ist low-aktiv
+  \end{lstlisting}
+  \begin{alertblock} {}
+    Kathode der 7 Seg. Disp. ist low-aktiv.
+  \end{alertblock}
 \end{frame}
 
+%-------------------------------------------------------------------------------
+% ENDE
+%-------------------------------------------------------------------------------
 
+\section{Ende}
+\begin{frame} {Ende}
+  \begin{block} {Nächstes mal}
+    \begin{itemize}
+      \item Aufgabe 2!
+      \item Für die Eiligen:
+      \begin{itemize}
+        \item Ich versuche heute schon zu Helfen
+        \item Sonst immer per Mail erreichbar
+      \end{itemize}
+    \end{itemize}
+  \end{block}
+  \begin{exampleblock}{Abschließendes}
+    Fragen, Anmerkungen und Verbesserungen ausdrücklich erwünscht.\\
+    Ich bin auf euer Feedback angewiesen.
+  \end{exampleblock}
+\end{frame}
 
 \end{document}
