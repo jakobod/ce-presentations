@@ -1,0 +1,98 @@
+\documentclass[aspectratio=169,presentation]{beamer}
+\usetheme{Boadilla}
+\useinnertheme{default}
+
+% -- locale-setup --------------------------------------------------------------
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{lmodern}
+\usepackage[locale=DE, mode=math, list-final-separator={ oder },
+            range-phrase={ bis }, scientific-notation=false, 
+            group-digits=integer] {siunitx}
+
+% -- package-includes ----------------------------------------------------------
+
+\usepackage{tikz}
+\usepackage{xcolor}
+\usetikzlibrary{positioning,automata,matrix,arrows.meta,fit}
+\usepackage{graphicx} % including images
+\usepackage[font=small,labelfont=bf]{caption} % captions of tables and figures
+
+
+% -- listing setup -------------------------------------------------------------
+
+\usepackage{listings}
+\definecolor{pblue}{rgb}{0.13,0.13,1}
+\definecolor{pgreen}{rgb}{0,0.5,0}
+\definecolor{pred}{rgb}{0.9,0,0}
+\definecolor{pgrey}{rgb}{0.46,0.45,0.48}
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{language=vhdl,
+	basicstyle=\ttfamily,
+	keywordstyle=\color{javapurple}\bfseries,
+	stringstyle=\color{javared},
+	commentstyle=\color{javagreen},
+	morecomment=[s][\color{javadocblue}]{/**}{*/},
+	tabsize=2,
+	showspaces=false,
+	showstringspaces=false
+}
+
+% -- custom commands -----------------------------------------------------------
+
+% just prints given text in large text and on empty frame.
+\newcommand{\sectionframe} [1] {
+	\begin{frame}
+		\vfill
+		\Huge
+		\centering
+		\usebeamercolor[fg]{title}
+		#1
+		\vfill
+		\par
+	\end{frame}
+}
+
+% wrapper-command to make pretty title takes
+% 1=short-title 2=long-title 3=terminnumber 4=date
+\newcommand{\maketitlepage} [5] {
+  \title[#1]{#2}
+  \subtitle{Termin #3}
+  \date{#4}
+  \author[Jakob Otto]{Jakob Otto}
+  \institute{HAW Hamburg}
+  \subject{#1}
+  \pgfdeclareimage[height=0.5cm, width=1.3cm]{university-logo}{#5}
+  \logo{\href{https://www.haw-hamburg.de}{\pgfuseimage{university-logo}}}
+  \begin{frame} {}
+    \titlepage
+  \end{frame}
+}
+
+% draws a link symbol
+\newcommand{\externalLink} {
+  \tikz[x=1.2ex, y=1.2ex, baseline=-0.05ex]{
+    \begin{scope}[x=1ex, y=1ex]
+      \clip (-0.1,-0.1) 
+        --++ (-0, 1.2) 
+        --++ (0.6, 0) 
+        --++ (0, -0.6) 
+        --++ (0.6, 0) 
+        --++ (0, -1);
+      \path[draw, 
+        line width = 0.5, 
+        rounded corners=0.5] 
+      (0,0) rectangle (1,1);
+    \end{scope}
+      \path[draw, line width = 0.5] (0.5, 0.5) 
+        -- (1, 1);
+    \path[draw, line width = 0.5] (0.6, 1) 
+      -- (1, 1) -- (1, 0.6);
+  }
+}
