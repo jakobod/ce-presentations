@@ -1,0 +1,55 @@
+\documentclass{article}
+
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows, positioning}
+
+\newcommand{\connectlr} [3] {
+  \path (#1.east) -- (#1.north east) coordinate[pos=0.5] (tmp11);
+  \path (#2.west) -- (#2.north west) coordinate[pos=0.5] (tmp21);
+  \draw[-latex] (tmp21) -- (tmp11);
+  \path (#1.east) -- (#1.south east) coordinate[pos=0.5] (tmp12);
+  \path (#2.west) -- (#2.south west) coordinate[pos=0.5] (tmp22);
+  \draw[-latex] (tmp12) -- (tmp22);
+  \path (#1) -- (#2) node [midway] {\circled{#3}};
+}
+
+\newcommand{\connecttb} [3] {  
+  \path (#1.south) -- (#1.south west) coordinate[pos=0.5] (tmp11);
+  \path (#2.north) -- (#2.north west) coordinate[pos=0.5] (tmp21);
+  \draw[-latex] (tmp21) -- (tmp11);
+  \path (#1.south) -- (#1.south east) coordinate[pos=0.5] (tmp12);
+  \path (#2.north) -- (#2.north east) coordinate[pos=0.5] (tmp22);
+  \draw[-latex] (tmp12) -- (tmp22);
+  \path (#1) -- (#2) node [midway] {\circled{#3}};
+}
+
+\newcommand{\circled} [1] {
+  \tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=2pt] (char) {#1};
+  }
+}
+
+\begin{document}
+\pagestyle{empty}
+
+% Define a few styles and constants
+\tikzstyle{block} = [text width=6em, 
+text centered, minimum height=6em, rounded corners]
+\tikzstyle{stm32} = [draw, fill=red!20, block]
+\tikzstyle{fpga}=[draw, fill=blue!20, block]
+\tikzstyle{flash}=[draw, fill=green!20, block]
+\tikzstyle{output}=[draw, fill=yellow!20, block]
+
+\begin{tikzpicture} [node distance=6cm]
+  \node (stm32) [stm32] {STM-32};
+  \node (fpga) [fpga, left of = stm32] {FPGA};
+  \node (flash) [flash, below of = stm32] {flash-memory};
+  \node (output) [output, right of = stm32] {PWM/\\DAC};
+
+  % -- connect fpga and stm32 --------------------------------------------------
+  \connectlr {fpga} {stm32} {2}
+  \connectlr {stm32} {output} {3}
+  \connecttb {stm32} {flash} {1}
+\end{tikzpicture}
+
+\end{document}
