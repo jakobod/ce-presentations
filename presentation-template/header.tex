@@ -20,7 +20,6 @@
 \usepackage{graphicx} % including images
 \usepackage[font=small,labelfont=bf]{caption} % captions of tables and figures
 
-
 % -- listing setup -------------------------------------------------------------
 
 \usepackage{listings}
@@ -94,5 +93,12 @@
         -- (1, 1);
     \path[draw, line width = 0.5] (0.6, 1) 
       -- (1, 1) -- (1, 0.6);
+  }
+}
+
+% Adds a circled number -> Looks better than the default
+\newcommand{\circled} [1] {
+  \tikz[baseline=(char.base)]{
+    \node[shape=circle,draw,inner sep=2pt, text centered, text width = .2cm] (char) {#1};
   }
 }
