@@ -12,6 +12,5 @@ else ()
   message(FATAL_ERROR "Could not find OpenCV!")
 endif ()
 
-
 target_link_libraries(sinus_kurve
   ${OpenCV_LIBRARIES})

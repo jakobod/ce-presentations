@@ -1,61 +1,60 @@
+#include <bitset>
+#include <cmath>
 #include <iostream>
-#include <opencv2/core/core.hpp>
-#include <opencv2/highgui.hpp>
-#include <opencv2/imgproc.hpp>
+#include <vector>
+
+using fixed_point = uint16_t;
+constexpr uint8_t fractional_bits = 11;
+
+// converts a floating_point number to a fixed_point type.
+fixed_point to_fixed(float input) {
+  return static_cast<fixed_point>(round(input * (1 << fractional_bits)));
+}
+
+/// Converts a fixed_point number to floating_point type.
+double to_float(fixed_point input) {
+  return (static_cast<float>(input) / static_cast<float>(1 << fractional_bits));
+}
+
+void print_vector(std::string msg, const std::vector<float> &values,
+                  int line_width = 15) {
+  int count = 0;
+  std::cout << msg << ":" << std::endl;
+  for (const auto val : values) {
+    std::cout << to_fixed(val) << ", ";
+    // add linebreak every `line_width` prints.
+    if (count++ <= 0) {
+      count = 0;
+      std::cout << std::endl;
+    }
+  }
+  std::cout << std::endl;
+}
 
 int main() {
-  const auto max = 1 << 11;
-  const auto mid = max/2;
-  std::vector<uint16_t> sinusSamples;  // vector mit samples
-  std::vector<uint16_t> sawToothSamples;
+  const auto max = 1 << fractional_bits;
+  const auto mid = max / 2;
+  std::vector<float> sinusSamples;
+  std::vector<float> sawToothSamples;
 
   // sinus calculation
   const auto sinStep = (2 * M_PI) / 360;
   auto rad = 0.0;
   for (int i = 0; i < 360; ++i) {
-    auto sinSample = std::floor(mid + (std::sin(rad) * mid));
+    auto sinSample = std::floor(mid + (std::sin(rad) * mid)) / max;
     sinusSamples.push_back(sinSample);
     rad += sinStep;
   }
 
   // sawtooth calculation
   const auto sawStep = max / 360;
-  auto sawSample = 0;
-  for(int i = 0; i < 360; ++i) {
+  auto sawSample = 0.0;
+  for (int i = 0; i < 360; ++i) {
     sawToothSamples.push_back(sawSample);
-    sawSample += sawStep;
+    sawSample += sawStep / max;
   }
 
-  // plot this stuff into Mat and show it.
-  // sinus
-  cv::Size sinSize(360*4, max);
-  cv::Mat sinPic(sinSize, CV_8UC3, cv::Scalar(255, 255, 255));
-
-  int x = 0;
-  for (const auto& value : sinusSamples) {
-    cv::drawMarker(sinPic, cv::Point(x, max-value-1), cv::Scalar(255, 0, 0), cv::MARKER_CROSS, 1, 20);
-    x += 4;
-  }
-
-  cv::namedWindow("plot", cv::WINDOW_NORMAL);
-  cv::imshow("plot", sinPic);
-  cv::waitKey(0);
-
-  // sawtooth
-  cv::Size sawSize(360*8, max);
-  cv::Mat sawPic(sawSize, CV_8UC3, cv::Scalar(255, 255, 255));
-  x = 0;
-  for (const auto& value : sawToothSamples) {
-    cv::drawMarker(sawPic, cv::Point(x, max-value-1), cv::Scalar(255, 0, 0), cv::MARKER_CROSS, 1, 20);
-    x += 4;
-  }
-  for (const auto& value : sawToothSamples) {
-    cv::drawMarker(sawPic, cv::Point(x, max-value-1), cv::Scalar(255, 0, 0), cv::MARKER_CROSS, 1, 20);
-    x += 4;
-  }
-
-  cv::imshow("plot", sawPic);
-  cv::waitKey(0);
-
-
+  // Print data
+  print_vector("sinusSamples", sinusSamples);
+  print_vector("sawToothSamples", sawToothSamples);
 }

@@ -68,7 +68,7 @@
             \end{itemize}
     \end{itemize}
     \column{0.4\textwidth}
-    \includegraphics[width=0.6\textwidth]{\kratzen}
+    \includegraphics[width=0.6\textwidth]{kratzen}
   \end{columns}
 \end{frame}
 
@@ -186,7 +186,7 @@
       \item Hauptroutine
             \begin{itemize}
               \item Pollt buttons
-              \item Füllt das fifo mit samples
+              \item Füllt den buffer mit samples
               \item Die main halt
             \end{itemize}
       \item ISR
@@ -196,6 +196,12 @@
             \end{itemize}
     \end{enumerate}
   \end{block}
+\end{frame}
+
+\sectionframe {init}
+
+\begin{frame} {Init }
+  
 \end{frame}
 
 \begin{frame} {Praktikum (II)}
@@ -208,29 +214,18 @@
       \item erst beim nutzen geeignet umformen.
     \end{itemize}
   \end{block}
-  \begin{alertblock} {Q-Format}
-    Denkt an die Darstellung der samples im Q-Format
-  \end{alertblock}
 \end{frame}
 
-\begin{frame} {Praktikum (III)}
-  \begin{center}
-    \includegraphics[height = .8\textheight]{figs/sinus.png}
-  \end{center}
-\end{frame}
-
-\begin{frame} [fragile] {Praktikum (IV)}
-  \begin{block} {Darstellung Verschiedener Amplituden}  
-    \begin{itemize}
-        \item Samples z.B. in +1/-1 Bereich generieren
-        \item Beim nutzen dann geeignet verarbeiten
-    \end{itemize}
-  \end{block}
-  \begin{lstlisting} [language=C]
-  // darstellung +1V/-1V
-  fifo[index] = samples[sampleIndex] + offset;
-  // Darstellung +0.5V/-0.5V
-  fifo[index] = (samples[sampleIndex] >> 1) + offset;
+\begin{frame} [fragile] {Wie Umformen?}
+  \begin{itemize}
+    \item Samples z.B. in +1V/-1V Format speichern
+    \item Beim nutzen dann teilen
+  \end{itemize}
+  \begin{lstlisting}
+// darstellung +1V/-1V
+fifo[index] = samples[sampleIndex] + offset;
+// Darstellung +0.5V/-0.5V
+fifo[index] = (samples[sampleIndex] >> 1) + offset;
   \end{lstlisting}
 \end{frame}
 
