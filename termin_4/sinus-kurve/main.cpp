@@ -32,14 +32,19 @@ std::bitset<1 + fractional_bits> to_binary(T x) {
 
 /// Prints any std::vector with newlines and fancy formatting.
 template <class Type>
-void print_vector(const std::vector<Type>& values, const int line_width = 15) {
+void print_vector(const std::vector<Type>& values, const int line_width = 15,
+                  const int steps = 1, const int times = 1) {
   int count = 0;
-  for (const auto val : values) {
-    std::cout << std::setw(5) << val << ", ";
-    // add newline every `line_width` prints.
-    if (++count >= line_width) {
-      count = 0;
-      std::cout << std::endl;
+  for (int i = 0; i < times; ++i) {
+    for (int i = 0; i < values.size(); i += steps) {
+      auto val = values.at(i);
+      std::cout << std::setw(3) << count++ << ", " << std::setw(5) << val
+                << ", " << std::endl;
+      // add newline every `line_width` prints.
+      /*if (++count >= line_width) {
+        count = 0;
+        std::cout << std::endl;
+      }*/
     }
   }
   std::cout << std::endl;
@@ -48,16 +53,17 @@ void print_vector(const std::vector<Type>& values, const int line_width = 15) {
 int main() {
   const auto max = 1 << fractional_bits;
   const auto mid = max / 2;
-  std::vector<fixed_point> sinusSamples;
-  std::vector<fixed_point> sawToothSamples;
+  std::vector<double> sinusSamples;
+  std::vector<double> sawToothSamples;
 
   // sinus calculation
   const auto sinStep = (2 * M_PI) / 360;
   auto rad = 0.0;
   for (int i = 0; i < 360; ++i) {
     auto sinSample = std::floor((std::sin(rad) * mid));
-    auto scaled_sin_sample = sinSample / mid;
-    sinusSamples.push_back(to_fixed(scaled_sin_sample));
+    // auto scaled_sin_sample = sinSample / mid;
+    // sinusSamples.push_back(to_fixed(scaled_sin_sample));
+    sinusSamples.push_back((sinSample));
     rad += sinStep;
   }
 
@@ -70,8 +76,8 @@ int main() {
   }
 
   // Print data
-  std::cout << "Sinus samples:" << std::endl;
-  print_vector(sinusSamples);
-  std::cout << "Sawtooth samples:" << std::endl;
-  print_vector(sawToothSamples);
+  // std::cout << "Sinus samples:" << std::endl;
+  print_vector(sinusSamples, 15, 5, 4);
+  // std::cout << "Sawtooth samples:" << std::endl;
+  // print_vector(sawToothSamples);
 }

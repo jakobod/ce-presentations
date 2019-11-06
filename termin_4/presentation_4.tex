@@ -58,15 +58,20 @@
 \begin{frame}{Ablauf}
   \begin{columns}
     \column{0.6\textwidth}
-    \begin{itemize}
-      \item Praktikum
-            \begin{itemize}
-              \item Was ist zu tun?
-              \item Was braucht ihr?
-              \item Beispielcode
-              \item Tipps
-            \end{itemize}
-    \end{itemize}
+      \begin{itemize}
+        \item Praktikumsaufgabe
+        \item Signalsamples
+        \begin{itemize}
+          \item Berechnen von Samples
+          \item Darstellung von signalen
+        \end{itemize}
+        \item Timer
+        \begin{itemize}
+          \item Generell
+          \item ARR
+          \item ARPE
+        \end{itemize}
+      \end{itemize}
     \column{0.4\textwidth}
     \includegraphics[width=0.6\textwidth]{\kratzen}
   \end{columns}
@@ -163,99 +168,269 @@
 %	Praktikum
 %-------------------------------------------------------------------------------
 
-\section*{Praktikum}
-\sectionframe{\link{http://users.informatik.haw-hamburg.de/~schafers/LOCAL/S19S_CE/Aufgabenzettel_Nr3_v06_Entwurf.pdf}{Aufgabenzettel}}
-\begin{frame} {Praktikum (I)}
-  \begin{block} {Was ist das Ziel?}
-    \begin{itemize}
-      \item DAC verstehen!
-      \item Sinus/Sägezahnsignale ausgeben
-      \item verschiedene Frequenzen darstellen
-      \item verschiedene Amplituden darstellen
-    \end{itemize}
-  \end{block}
-\end{frame}
+  \section*{Praktikum}
+  \sectionframe{\link{http://users.informatik.haw-hamburg.de/~schafers/LOCAL/S19S_CE/Aufgabenzettel_Nr3_v06_Entwurf.pdf}{Aufgabenzettel}}
+  \begin{frame} {Praktikum (I)}
+    \begin{block} {Was ist das Ziel?}
+      \begin{itemize}
+        \item DAC verstehen!
+        \item Sinus/Sägezahnsignale ausgeben
+        \item verschiedene Frequenzen darstellen
+        \item verschiedene Amplituden darstellen
+      \end{itemize}
+    \end{block}
+  \end{frame}
 
-% Schäfers Beispielcode
-\sectionframe{\link{https://users.informatik.haw-hamburg.de/~schafers/LOCAL/S19S_CE/CODE/DemoForLabA3_Curve/main.c}{Schäfers Beispielcode}}
+  % Schäfers Beispielcode
+  \sectionframe{\link{https://users.informatik.haw-hamburg.de/~schafers/LOCAL/S19S_CE/CODE/DemoForLabA3_Curve/main.c}{Schäfers Beispielcode}}
 
-\begin{frame} {Praktikum (II)}
-  \begin{block} {Was Passiert da?}
-    Zwei verschiedene Handlungsstränge!
-    \begin{enumerate}
-      \item Hauptroutine
-            \begin{itemize}
-              \item Pollt buttons
-              \item Füllt das fifo mit samples
-              \item Die main halt
-            \end{itemize}
-      \item ISR
-            \begin{itemize}
-              \item Wird durch Interrupts ausgelöst
-              \item Schreibt nächstes sample in DAC-Register
-            \end{itemize}
-    \end{enumerate}
-  \end{block}
-\end{frame}
+  \begin{frame} {Praktikum (II)}
+    \begin{block} {Was Passiert da?}
+      Zwei verschiedene Handlungsstränge!
+      \begin{enumerate}
+        \item Hauptroutine
+              \begin{itemize}
+                \item Pollt buttons
+                \item Füllt das fifo mit samples
+                \item Die main halt
+              \end{itemize}
+        \item ISR
+              \begin{itemize}
+                \item Wird durch Interrupts ausgelöst
+                \item Schreibt nächstes sample in DAC-Register
+              \end{itemize}
+      \end{enumerate}
+    \end{block}
+  \end{frame}
 
-\begin{frame} {Praktikum (II)}
-  \begin{block} {Samples?}
-    Für die Lookup-tables braucht ihr Samples.
-    \begin{itemize}
-      \item volle Periode des Signals berechnen
-      \item Samples in einem Array hard-coden
-      \item Am besten ohne Offset speichern $\rightarrow$ Signal sollte um 0-pkt laufen.
-      \item erst beim nutzen geeignet umformen.
-    \end{itemize}
-  \end{block}
-  \begin{alertblock} {Q-Format}
-    Denkt an die Darstellung der samples im Q-Format
-  \end{alertblock}
-\end{frame}
+%-------------------------------------------------------------------------------
+%	Samples
+%-------------------------------------------------------------------------------
 
-\begin{frame} {Praktikum (III)}
-  \begin{center}
-    \includegraphics[height = .8\textheight]{figs/sinus.png}
-  \end{center}
-\end{frame}
+  \begin{frame} {Praktikum (II)}
+    \begin{block} {Samples?}
+      Für die Lookup-tables braucht ihr Samples.
+      \begin{itemize}
+        \item volle Periode des Signals berechnen
+        \item Samples in einem Array hard-coden
+        \item Am besten ohne Offset speichern $\rightarrow$ Signal sollte um 0-pkt laufen.
+        \item erst beim nutzen geeignet umformen.
+      \end{itemize}
+    \end{block}
+    \begin{alertblock} {Q-Format}
+      Denkt an die Darstellung der samples im Q-Format
+    \end{alertblock}
+  \end{frame}
 
-\begin{frame} [fragile] {Praktikum (IV)}
-  \begin{block} {Darstellung Verschiedener Amplituden}  
-    \begin{itemize}
-        \item Samples z.B. in +1/-1 Bereich generieren
-        \item Beim nutzen dann geeignet verarbeiten
-    \end{itemize}
-  \end{block}
-  \begin{lstlisting} [language=C]
-  // darstellung +1V/-1V
-  fifo[index] = samples[sampleIndex] + offset;
-  // Darstellung +0.5V/-0.5V
-  fifo[index] = (samples[sampleIndex] >> 1) + offset;
-  \end{lstlisting}
-\end{frame}
+  \begin{frame} {Praktikum}
+    \begin{block} {Welches Q-Format?}
+      Bei 360 samples brauchen wir 9 Integer-bits $\rightarrow$ $2^9 = 512$ \\
+      \vspace{0.5cm}
+      Qu9.23 ist also sinnvolles Format
+    \end{block}
+  \end{frame}
 
-\sectionframe{Berechnungsbeispiel}
+  \begin{frame} {Praktikum (III)}
+    \begin{center}
+      \includegraphics[height = .8\textheight]{figs/sinus.png}
+    \end{center}
+  \end{frame}
 
-\begin{frame} {Berechnung der Schrittweite}
-  Zum Darstellen verschiedener Frequenzen benötigt ihr verschiedene Schrittweiten.
-  \begin{itemize}
-    \item kleine Schrittweite $\rightarrow$ kleine Frequenz
-    \item große Schrittweite $\rightarrow$ große Frequenz
-  \end{itemize}
-  \vspace{0.5cm}
-  Berechnung:\\
-  $delta_{freq} = ((((ANZ\_SAMPLES) * FREQ) << frac) / TIMER\_FREQ)$\\
-  frac = fractional Anteil des Q-Formats
-\end{frame}
+  \sectionframe{Beispielcode zur Berechnung}
 
-\begin{frame} {Schrittweite $\rightarrow$ Q-Format?!}
-  Für höchste genauigkeit Q-Format nutzen!\\
-  \vspace{0.5cm}
-  \pause
-  Bei 360 samples brauchen wir 9 Integer-bits $\rightarrow$ $2^9 = 512$ \\
-  \vspace{0.5cm}
-  Qu9.23 ist also sinnvolles Format
-\end{frame}
+%-------------------------------------------------------------------------------
+%	Darstellung von Samples
+%-------------------------------------------------------------------------------
 
+  \begin{frame} [fragile] {Praktikum (IV)}
+    \begin{block} {Darstellung Verschiedener Amplituden}  
+      \begin{itemize}
+          \item Samples z.B. in +1/-1 Bereich generieren
+          \item Beim nutzen dann geeignet verarbeiten
+      \end{itemize}
+    \end{block}
+    \begin{lstlisting} [language=C]
+// darstellung 0V/3V
+fifo[index] = (samples[sampleIndex] * MAX_VAL) + offset;
+// Darstellung 0/1.5V
+fifo[index] = ((samples[sampleIndex] >> 1) * MAX_VAL) + offset;
+    \end{lstlisting}
+  \end{frame}
 
+  \begin{frame} {Praktikum (V)}
+    \begin{block} {Darstellung verschiedener Frequenzen}
+      Zum Darstellen verschiedener Frequenzen benötigt ihr verschiedene Schrittweiten.
+      \begin{itemize}
+        \item kleine Schrittweite $\rightarrow$ kleine Frequenz
+        \item große Schrittweite $\rightarrow$ große Frequenz
+      \end{itemize}
+    \end{block}
+    \begin{exampleblock} {Berechnung:}
+      \begin{equation*}
+        delta_{freq} = ((((ANZ\_SAMPLES) * FREQ) << frac) / TIMER\_FREQ)
+        frac = fractional Anteil des Q-Formats
+      \end{equation*}
+    \end{exampleblock}
+  \end{frame}
+
+  \begin{frame} {Praktikum (VI)}
+    \begin{center}
+      \includegraphics [height=.75\textheight]{figs/sinus_step1} 
+    \end{center}
+    \begin{block} {}
+      singlestep Darstellung
+    \end{block}
+  \end{frame}
+
+  \begin{frame} {Praktikum (VI)}
+    \begin{center}
+      \includegraphics [height=.75\textheight]{figs/sinus_step5} 
+    \end{center}
+    \begin{block} {}
+      5 step Darstellung
+    \end{block}
+  \end{frame}
+
+  \begin{frame} {Praktikum}
+    \begin{block} {Welches Q-Format Für Schrittweite?}
+      Bei 360 samples brauchen wir 9 Integer-bits $\rightarrow$ $2^9 = 512$ \\
+      \vspace{0.5cm}
+      Qu9.23 ist also sinnvolles Format
+    \end{block}
+  \end{frame}
+
+%-------------------------------------------------------------------------------
+%	Timer
+%-------------------------------------------------------------------------------
+
+  \section{Timer}
+  \begin{frame} {Timer (I)}
+    \begin{block} {Was ist ein Timer?}
+      \begin{itemize}
+        \item Eigentlich ein \textbf{Counter}
+        \item Zählt Ticks von internem Quarz/externer Quelle
+        \item Bei maximalem Zählstand kann zB IRQ ausgelöst werden 
+        \begin{itemize}
+          \item[$\rightarrow$] Timer startet dann von vorn
+        \end{itemize}
+      \end{itemize}
+    \end{block}
+  \end{frame}
+
+  \begin{frame} {Timer (II)}
+    \begin{center}
+      \includegraphics[width=.8\textwidth]{figs/kurve_timer}  
+    \end{center}
+    \begin{block} {}
+      Verlauf eines üblichen Timers
+    \end{block}
+  \end{frame}
+
+  \section{Prescaler}
+  \begin{frame}{Timer (III)}
+    \begin{block} {Prescaler}
+      \begin{itemize}
+        \item Systemfrequenz meist zu hoch um Sinnvoll zu sein
+        \begin{itemize}
+          \item[$\rightarrow$] Wertebereich wird zu schnell verlassen
+        \end{itemize} 
+        \item dafür gibt es Prescaler
+        \item weiterer Zähler, der eingehenden takt \glqq{}vorteilt\grqq{}
+        \item Auflösung wird geringer
+        \item Timer läuft seltener über
+      \end{itemize}
+    \end{block}
+  \end{frame}
+
+  \begin{frame}{Timer}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/timer_generell}
+    \end{center}
+    \begin{block} {}
+      Aufbau eines Timers
+    \end{block}
+  \end{frame}
+
+  \section{ARR}
+  \begin{frame}{Timer}
+    \begin{block} {ARR}
+      \begin{itemize}
+        \item Das ARR (Auto Reload Register) beinhaltet einen variablen Endwert.
+        \item Zählstand wird mit dem Wert verglichen
+        \item Bei erreichen:
+        \begin{itemize}
+          \item reset vom Zählstand
+          \item prescaler $\rightarrow$ tick an timer
+          \item Timer $\rightarrow$ IRQ
+        \end{itemize}
+      \end{itemize}
+    \end{block}
+  \end{frame}
+
+  \begin{frame}{Timer}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/ARPE_disable}
+    \end{center}
+  \end{frame}
+
+  \section{ARPE}
+  \begin{frame}{Timer}
+    \begin{block} {ARPE}
+      \begin{itemize}
+        \item ARR kann zur laufzeit verändert werden
+        \item Timer kann schon über den neuen Wert gezählt haben
+        \begin{itemize}
+          \item[$\rightarrow$] zählt dann bis maxwert des Registers
+        \end{itemize}
+        \item um das zu vermeiden gibts das ARPE-bit
+        \item änderung wird durch shadow-register verzögert
+        \begin{itemize}
+          \item[$\rightarrow$] erst bei nächstem overflow ins ARR übernommen
+        \end{itemize}
+      \end{itemize}
+    \end{block}
+  \end{frame}
+
+  \begin{frame}{Timer ()}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/ARPE_disable}    
+    \end{center}
+  \end{frame}
+
+  \begin{frame}{Timer}
+    \begin{center}
+      \includegraphics[width=\textwidth]{figs/ARPE_enable}    
+    \end{center}
+  \end{frame}
+
+  \begin{frame}[fragile]{Code}
+    \begin{lstlisting} [language=C]
+  /// Timer setup routine
+  TIM1->CR1 = 0; // disable timer1
+  TIM1->CR2 = 0; // disable timer2
+  TIM1->PSC = 0; // prescaler value
+  TIM1->ARR = (SYS_FREQ / TIMER_FREQ) -1; // Reload Register Value
+  TIM1->DIER = TIM_DIER_UIE; // enable Interrupt
+  TIM1->CR1 = TIM_CR1_ARPE; // Auto Reload preload enable
+
+  // enable timer
+  TIM1->CR1 |= TIM_CR1_CEN;
+    \end{lstlisting}
+  \end{frame}
+
+  \sectionframe{\link{https://www.st.com/content/ccc/resource/technical/document/application_note/group0/91/01/84/3f/7c/67/41/3f/DM00236305/files/DM00236305.pdf/jcr:content/translations/en.DM00236305.pdf}{General-purpose timer cookbook}}
+
+  \section{Ende}
+  \begin{frame} {Ende}
+    \begin{block} {Nächstes mal}
+      \begin{itemize}
+        \item Aufgabe 4?
+        \item Andere Wünsche?
+      \end{itemize}
+    \end{block}
+    \begin{exampleblock}{Abschließendes}
+      Fragen, Anmerkungen und Verbesserungen ausdrücklich erwünscht.\\
+      Ich bin auf euer Feedback angewiesen.
+    \end{exampleblock}
+  \end{frame}
 \end{document}
