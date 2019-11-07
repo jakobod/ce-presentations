@@ -222,14 +222,6 @@
     \end{alertblock}
   \end{frame}
 
-  \begin{frame} {Praktikum}
-    \begin{block} {Welches Q-Format?}
-      Bei 360 samples brauchen wir 9 Integer-bits $\rightarrow$ $2^9 = 512$ \\
-      \vspace{0.5cm}
-      Qu9.23 ist also sinnvolles Format
-    \end{block}
-  \end{frame}
-
   \begin{frame} {Praktikum (III)}
     \begin{center}
       \includegraphics[height = .8\textheight]{figs/sinus.png}
@@ -272,6 +264,15 @@ fifo[index] = ((samples[sampleIndex] >> 1) * MAX_VAL) + offset;
       \end{equation*}
     \end{exampleblock}
   \end{frame}
+
+  \begin{frame} {Praktikum}
+    \begin{block} {Welches Q-Format?}
+      Bei 360 samples brauchen wir 9 Integer-bits $\rightarrow$ $2^9 = 512$ \\
+      \vspace{0.5cm}
+      Qu9.23 ist also sinnvolles Format
+    \end{block}
+  \end{frame}
+
 
   \begin{frame} {Praktikum (VI)}
     \begin{center}
