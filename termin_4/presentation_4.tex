@@ -207,7 +207,7 @@
 %	Samples
 %-------------------------------------------------------------------------------
 
-  \begin{frame} {Praktikum (II)}
+  \begin{frame} {Praktikum (III)}
     \begin{block} {Samples?}
       Für die Lookup-tables braucht ihr Samples.
       \begin{itemize}
@@ -222,27 +222,19 @@
     \end{alertblock}
   \end{frame}
 
-  \begin{frame} {Praktikum}
-    \begin{block} {Welches Q-Format?}
-      Bei 360 samples brauchen wir 9 Integer-bits $\rightarrow$ $2^9 = 512$ \\
-      \vspace{0.5cm}
-      Qu9.23 ist also sinnvolles Format
-    \end{block}
-  \end{frame}
-
-  \begin{frame} {Praktikum (III)}
+  \begin{frame} {Praktikum (IV)}
     \begin{center}
       \includegraphics[height = .8\textheight]{figs/sinus.png}
     \end{center}
   \end{frame}
 
-  \sectionframe{Beispielcode zur Berechnung}
+  \sectionframe{\link{https://github.com/jakobod/sinus-samples}{Beispielcode zur Berechnung}}
 
 %-------------------------------------------------------------------------------
 %	Darstellung von Samples
 %-------------------------------------------------------------------------------
 
-  \begin{frame} [fragile] {Praktikum (IV)}
+  \begin{frame} [fragile] {Praktikum (V)}
     \begin{block} {Darstellung Verschiedener Amplituden}  
       \begin{itemize}
           \item Samples z.B. in +1/-1 Bereich generieren
@@ -257,7 +249,7 @@ fifo[index] = ((samples[sampleIndex] >> 1) * MAX_VAL) + offset;
     \end{lstlisting}
   \end{frame}
 
-  \begin{frame} {Praktikum (V)}
+  \begin{frame} {Praktikum (VI)}
     \begin{block} {Darstellung verschiedener Frequenzen}
       Zum Darstellen verschiedener Frequenzen benötigt ihr verschiedene Schrittweiten.
       \begin{itemize}
@@ -273,7 +265,7 @@ fifo[index] = ((samples[sampleIndex] >> 1) * MAX_VAL) + offset;
     \end{exampleblock}
   \end{frame}
 
-  \begin{frame} {Praktikum (VI)}
+  \begin{frame} {Praktikum (VII)}
     \begin{center}
       \includegraphics [height=.75\textheight]{figs/sinus_step1} 
     \end{center}
@@ -282,7 +274,7 @@ fifo[index] = ((samples[sampleIndex] >> 1) * MAX_VAL) + offset;
     \end{block}
   \end{frame}
 
-  \begin{frame} {Praktikum (VI)}
+  \begin{frame} {Praktikum (VIII)}
     \begin{center}
       \includegraphics [height=.75\textheight]{figs/sinus_step5} 
     \end{center}
@@ -291,7 +283,7 @@ fifo[index] = ((samples[sampleIndex] >> 1) * MAX_VAL) + offset;
     \end{block}
   \end{frame}
 
-  \begin{frame} {Praktikum}
+  \begin{frame} {Praktikum (Praktikum IX)}
     \begin{block} {Welches Q-Format Für Schrittweite?}
       Bei 360 samples brauchen wir 9 Integer-bits $\rightarrow$ $2^9 = 512$ \\
       \vspace{0.5cm}
@@ -303,7 +295,7 @@ fifo[index] = ((samples[sampleIndex] >> 1) * MAX_VAL) + offset;
 %	Timer
 %-------------------------------------------------------------------------------
 
-  \section{Timer}
+  \section{Timer(I)}
   \begin{frame} {Timer (I)}
     \begin{block} {Was ist ein Timer?}
       \begin{itemize}
@@ -342,7 +334,7 @@ fifo[index] = ((samples[sampleIndex] >> 1) * MAX_VAL) + offset;
     \end{block}
   \end{frame}
 
-  \begin{frame}{Timer}
+  \begin{frame}{Timer (IV)}
     \begin{center}
       \includegraphics[width=\textwidth]{figs/timer_generell}
     \end{center}
@@ -352,7 +344,7 @@ fifo[index] = ((samples[sampleIndex] >> 1) * MAX_VAL) + offset;
   \end{frame}
 
   \section{ARR}
-  \begin{frame}{Timer}
+  \begin{frame}{Timer (V)}
     \begin{block} {ARR}
       \begin{itemize}
         \item Das ARR (Auto Reload Register) beinhaltet einen variablen Endwert.
@@ -367,14 +359,14 @@ fifo[index] = ((samples[sampleIndex] >> 1) * MAX_VAL) + offset;
     \end{block}
   \end{frame}
 
-  \begin{frame}{Timer}
+  \begin{frame}{Timer (VI)}
     \begin{center}
       \includegraphics[width=\textwidth]{figs/ARPE_disable}
     \end{center}
   \end{frame}
 
   \section{ARPE}
-  \begin{frame}{Timer}
+  \begin{frame}{Timer (VII)}
     \begin{block} {ARPE}
       \begin{itemize}
         \item ARR kann zur laufzeit verändert werden
@@ -391,13 +383,13 @@ fifo[index] = ((samples[sampleIndex] >> 1) * MAX_VAL) + offset;
     \end{block}
   \end{frame}
 
-  \begin{frame}{Timer ()}
+  \begin{frame}{Timer (VIII)}
     \begin{center}
       \includegraphics[width=\textwidth]{figs/ARPE_disable}    
     \end{center}
   \end{frame}
 
-  \begin{frame}{Timer}
+  \begin{frame}{Timer (IX)}
     \begin{center}
       \includegraphics[width=\textwidth]{figs/ARPE_enable}    
     \end{center}
