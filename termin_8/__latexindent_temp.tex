@@ -54,11 +54,8 @@
           \item Aufgabenzettel Nr 5
           \item Metastabile Zustände
           \item Asynchrone Kommunikation
-          \begin{itemize}
-            \item 4 Phasen Handshake
-          \end{itemize}
           \item Statemachines in VHDL
-          \item VHDL-teil 4-Phasen Handshake
+          \item VHDL-teil Aufgabe 5
         \end{itemize}
       \column{0.4\textwidth}
         \includegraphics[width=0.6\textwidth]{\kratzen}
@@ -153,46 +150,25 @@
     \end{block}
   \end{frame}
 
-  \begin{frame} {Lesender Zugriff}
-    \begin{columns}
-      \column{0.3\textwidth}
-      \column{0.4\textwidth}
-        \begin{block} {}
-          \begin{enumerate}
-            \setcounter{enumi}{0}
-            \item Master initiiert RD/nWR = '1'\\
-                  Datenbus auf high-impedance\\
-                  REQ auf '1'
-          \end{enumerate}
-        \end{block}
-        \begin{block} {}
-          \begin{enumerate}
-            \setcounter{enumi}{1}
-            \item Slave reagiert\\
-                  legt geforderte Daten auf Datenbus \\
-                  acknowledged (ACK = '1')
-          \end{enumerate}
-        \end{block}
-        \begin{block} {}
-          \begin{enumerate}
-            \setcounter{enumi}{2}
-            \item Master quittiert Empfang\\
-                  REQ = '0'
-          \end{enumerate}
-        \end{block}
-        \begin{block} {}
-          \begin{enumerate}
-            \setcounter{enumi}{3}
-            \item Slave nimmt Daten vom Bus\\
+  \begin{frame} {}
+    Die 4 Phasen sind:
+    \begin{enumerate}
+      \setlength\itemsep{.5cm}
+      \item Master initiiert RD/nWR = '1'\\
+            Datenbus auf high-impedance\\
+            REQ auf '1'
+      \item Slave reagiert\\
+            legt geforderte Daten auf Datenbus \\
+            acknowledged (ACK = '1')
+      \item Master quittiert Empfang\\
+            REQ = '0'
+      \item Slave nimmt Daten vom Bus\\
             Datenbus auf High-impedance
-          \end{enumerate}
-        \end{block}
-      \column{0.3\textwidth}
-    \end{columns}
+    \end{enumerate}
   \end{frame}
 
 
-  \begin{frame} {Lesender Zugriff}
+  \begin{frame} {lesender Zugriff}
     \begin{figure}[ht]
       \centering
       \includegraphics[height=0.7\textheight]{figs/lesen_phase.png}
@@ -202,12 +178,12 @@
 
 
   \begin{frame} [fragile]
-    \begin{lstlisting} [language=C]
+    \begin{lstlisting}
   uint16_t  rxdat;
-  // wait for the fpga to be ready
+  /* wait for the fpga to be ready */
   while(READY == 0);
 
-  // setup the connection to the FPGA
+  /* setup the connection to the FPGA */
   OUTPUT_DISABLE;
   SET_READ;
 
@@ -222,44 +198,25 @@
     \end{lstlisting}
   \end{frame}
 
-  \begin{frame} {Schreibender Zugriff}
-    \begin{columns}
-      \column{0.3\textwidth}
-      \column{0.4\textwidth}
-        \begin{block} {}
-          \begin{enumerate}
-            \setcounter{enumi}{0}
-            \item Master initiiert RD/nWR = '0'\\
-                  legt Daten auf Bus \\
-                  REQ auf '1'
-          \end{enumerate}
-        \end{block}
-        \begin{block} {}
-          \begin{enumerate}
-            \setcounter{enumi}{1}
-            \item Slave quittiert\\
-                  ACK = '1'
-          \end{enumerate}
-        \end{block}
-        \begin{block} {}
-          \begin{enumerate}
-            \setcounter{enumi}{2}
-            \item Master setzt Bus auf High-impedance\\
-                  REQ = '0'
-          \end{enumerate}
-        \end{block}
-        \begin{block} {}
-          \begin{enumerate}
-            \setcounter{enumi}{3}
-            \item slave quittiert quittung\\
-                  ACK = '0'
-          \end{enumerate}
-        \end{block}
-      \column{0.3\textwidth}
-    \end{columns}
+
+  \begin{frame} {Ablauf vom Handshake}
+    Die 4 Phasen sind:
+    \begin{enumerate}
+      \setlength\itemsep{.5cm}
+      \item Master initiiert RD/nWR = '0'\\
+            legt Daten auf Bus \\
+            REQ auf '1'
+      \item Slave quittiert\\
+            ACK = '1'
+      \item Master setzt Bus auf High-impedance\\
+            REQ = '0'
+      \item slave quittiert quittung\\
+            ACK = '0'
+    \end{enumerate}
   \end{frame}
 
-  \begin{frame} {Schreibender Zugriff}
+
+  \begin{frame} {schreibender Zugriff}
     \begin{figure}[ht]
       \centering
       \includegraphics[height=0.7\textheight]{figs/schreibender_zugriff.png}
@@ -267,13 +224,14 @@
     \end{figure}
   \end{frame}
 
+
   \begin{frame} [fragile]
-    \begin{lstlisting} [language=C]
-  // setup connection to the FPGA
+    \begin{lstlisting}
+  /* setup connection to the FPGA */
   SET_WRITE;
 
   OUTPUT_ENABLE;
-  // set data
+  /* set data */
   GPIOE->ODR = txdat;
 
   // handle transaction by 4 phase handshake
@@ -284,11 +242,8 @@
     \end{lstlisting}
   \end{frame}
 
-  %-----------------------------------------------------------------------------
-  %	FPGA Seite 4 Phasen handshake
-  %-----------------------------------------------------------------------------
 
-  \begin{frame} [fragile] {Tristate buffer}
+  \begin{frame} [fragile] {FPGA-Seite}
     \begin{columns}
       \column{0.5\textwidth}
         Tri-State Treiber für Datenbus
@@ -310,28 +265,31 @@
     \end{columns}
   \end{frame}
 
+  %---------------------------------------------------------------------------------------------------------------------
+  %	Ideen für Aufgabe 1
+  %---------------------------------------------------------------------------------------------------------------------
+
   \section{4 Phasen handshake in VHDL}
   \begin{frame} {4 Phasen handshake Controller}
-    \begin{block} {}
+    \begin{itemize}
+      \item STM-32-Seite letztes mal geklärt
       \begin{itemize}
-        \item STM-32 Seite (Master) nun klar
-        \begin{itemize}
-          \item Wie also nun FPGA Seite (Slave)?
-        \end{itemize}
-        \item 4 Phasen Handshake gut durch Statemachine darstellbar
-        \item 4 Zustände
-        \item Lesen/Schreiben nicht großartig unterschiedlich
-        \begin{itemize}
-          \item Nur unterschiede bei Reaktion auf Request
-        \end{itemize}
+        \item Wie also nun FPGA-Seite?
       \end{itemize}
-    \end{block}
+      \item 4 Phasen Handshake gut durch Statemachine darstellbar
+      \item 4 Zustände
+      \item Lesen/Schreiben nicht großartig unterschiedlich
+      \begin{itemize}
+        \item Jedenfalls nicht auf FPGA Seite
+      \end{itemize}
+    \end{itemize}
   \end{frame}
 
 
   \begin{frame} {4 Phasen Statemachine}
     \tikzstyle{format} = [draw, thin, fill=blue!20]
     \tikzstyle{medium} = [ellipse, draw, thin, fill=green!20, minimum height=2.5em]
+    
     \begin{center}
       \begin{figure}
         \begin{tikzpicture}[node distance=3cm, auto,>=latex', thick]
@@ -348,84 +306,120 @@
     \end{center}
   \end{frame}
 
-  \begin{frame} [fragile] {Statemachine Aufbau I}
-    \begin{block} {Statemachines}
-      \begin{itemize}
-        \item Sollten eigentlich noch aus DT bekannt sein
-        \item hier trotzdem eine kurze Auffrischung!
-      \end{itemize}
-    \end{block}
 
-    \begin{lstlisting} [language=vhdl]
+
+
+  \begin{frame} [fragile] {Statemachine Aufbau I}
+    \begin{lstlisting}
   -- 2 bit - 4 states
   signal state_ns : std_logic_vector(1 downto 0);
   signal state_cs : std_logic_vector(1 downto 0) := (others=>'0');
+
+  -- 4 phase handshake 
+  signal req_cs : std_logic := '0';
+
+  signal ack_ns : std_logic;
+  signal ack_cs : std_logic := '0';
+
+  signal rnw_cs : std_logic := '0';
     \end{lstlisting}
   \end{frame}
 
+
   \begin{frame} [fragile] {Statemachine Aufbau II}
-    \vspace{-.3cm}
+    \vspace{-.7cm}
     \begin{lstlisting}
   state_v := state_cs;
   case state_cs is
     when "00" =>
       -- phase 1
-      state_v := "01";
+
     when "01" =>
       -- phase 2
-      state_v := "10";
+
     when "10" =>
       -- phase 3
-      state_v := "00";
+
     when others =>
       -- default case
+      
   end case;
   state_ns <= state_v;
     \end{lstlisting}
   \end{frame}
 
-  \sectionframe{Was passiert nun in den Einzelnen States?}
 
   \begin{frame} {State 1}
-    \begin{block} {State 1}
+    \begin{itemize}
+      \item Read?
       \begin{itemize}
-        \item Read?
-        \begin{itemize}
-          \item oe $\leftarrow$ 1
-          \item dato $\leftarrow$ fx
-        \end{itemize}
-        \item Write?
-        \begin{itemize}
-          \item oe $\leftarrow$ 0
-          \item req $\leftarrow$ 1
-          \item rdy $\leftarrow$ 0
-        \end{itemize}
-        \item state $\leftarrow$ 1
+        \item oe $\leftarrow$ 1
+        \item dato $\leftarrow$ fx
       \end{itemize}
-    \end{block}
+      \item Write?
+      \begin{itemize}
+        \item oe $\leftarrow$ 0
+        \item req $\leftarrow$ 1
+        \item rdy $\leftarrow$ 0
+      \end{itemize}
+      \item state $\leftarrow$ 1
+    \end{itemize}
   \end{frame}
+
 
   \begin{frame} {State 2}
-    \begin{block} {State 2}
+    \begin{itemize}
+      \item ack $\leftarrow$ 1
+      \item req = 0?
       \begin{itemize}
-        \item ack $\leftarrow$ 1
-        \item req = 0?
-        \begin{itemize}
-          \item oe $\leftarrow$ 0
-          \item state $\leftarrow$ 2
-        \end{itemize}
+        \item oe $\leftarrow$ 0
+        \item state $\leftarrow$ 2
       \end{itemize}
-    \end{block}
+    \end{itemize}
   \end{frame}
 
+
   \begin{frame} {State 3}
-    \begin{block} {State 3}       
-      \begin{itemize}
-        \item ack $\leftarrow$ 0
-        \item oe $\leftarrow$ 0
-        \item state $\leftarrow$ 0
-      \end{itemize}
-    \end{block}
+    \begin{itemize}
+      \item ack $\leftarrow$ 0
+      \item oe $\leftarrow$ 0
+      \item state $\leftarrow$ 0
+    \end{itemize}
+  \end{frame}
+
+
+  \begin{frame} {Aufbau Der Schaltung}
+    \begin{center}
+      \begin{tikzpicture} [    
+        auto,
+        block/.style={
+        rectangle,
+        draw=blue,
+        thick,
+        fill=blue!20,
+        text width=5em,
+        text centered,
+        align=center,
+        rounded corners,
+        minimum height=2em
+        }]
+
+        \node[block, text centered,text width = 0.25\textwidth, minimum height=5cm, draw] (stm) {STM32};
+      
+        \node[block, text width=3cm] (controller) [right=of stm, xshift=5cm, yshift=2cm] {Controller};
+        \node[block, text centered,text width = 0.25\textwidth, minimum height = 3 cm, draw] (computer) [below=of controller]{sqrtComputer};
+        \node[draw,thick,rounded corners, draw=blue,fit=(controller) (computer)] {};
+        
+        \path[every node/.style={sloped,anchor=south,auto=false}]
+          (stm) edge node [above] {REQ, ACK} node [below] {RD/nWR, DATA} (controller)
+
+          (controller) edge [transform canvas={xshift=-1cm}]  node {req} (computer)            
+          (controller) edge [transform canvas={xshift=-.3cm}] node {fx} (computer)
+          (controller) edge [transform canvas={xshift=.3cm}]  node {x} (computer)
+          (controller) edge [transform canvas={xshift=1cm}]  node {rdy} (computer);
+
+      \end{tikzpicture}
+    \end{center}
   \end{frame}
 
 \end{document}
