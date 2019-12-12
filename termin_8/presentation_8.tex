@@ -69,8 +69,8 @@
   %	Aufgabenzettel
   %-----------------------------------------------------------------------------
 
-  \section{4-Phasen-Handshake}
-  \sectionframe{\link{https://users.informatik.haw-hamburg.de/~schafers/LOCAL/S19S_CE/Aufgabenzettel_Nr5_v08.pdf}{Aufgabenzettel}}
+  \section{Aufgabenzettel 5}
+  \sectionframe{\link{https://users.informatik.haw-hamburg.de/~schafers/LOCAL/S19S_CE/Aufgabenzettel_Nr5_v08.pdf}{Aufgabenzettel 5}}
 
   %-----------------------------------------------------------------------------
   %	Metastabile Zustände
@@ -111,6 +111,7 @@
   %	Asynchrone Kommunikation
   %-----------------------------------------------------------------------------
 
+  \section{Asynchrone Kommunikation}
   \begin{frame} {Asynchrone Kommunikation}
     \begin{block} {}
       \begin{itemize}
@@ -128,7 +129,8 @@
   %	4 Phasen Handshake
   %-----------------------------------------------------------------------------
 
-  \begin{frame} {4-Phasen-Handshake}
+  \section{4 Phasen Handshake}
+  \begin{frame} {4 Phasen Handshake}
     \begin{block} {}
       \begin{itemize}
         \item Protokoll zum synchronen Übermitteln von Daten
@@ -142,7 +144,7 @@
     \end{block}
   \end{frame}
 
-  \begin{frame} {4-Phasen-Handshake}
+  \begin{frame} {4 Phasen Handshake}
     \begin{block} {Welche Leitungen werden benötigt?}
       \begin{itemize}
         \item RD/nWR - signal zum lesen/schreiben signalisieren
@@ -153,6 +155,7 @@
     \end{block}
   \end{frame}
 
+  \subsection{Lesender Zugriff}
   \begin{frame} {Lesender Zugriff}
     \begin{columns}
       \column{0.3\textwidth}
@@ -222,6 +225,7 @@
     \end{lstlisting}
   \end{frame}
 
+  \subsection{Schreibender Zugriff}
   \begin{frame} {Schreibender Zugriff}
     \begin{columns}
       \column{0.3\textwidth}
@@ -288,6 +292,7 @@
   %	FPGA Seite 4 Phasen handshake
   %-----------------------------------------------------------------------------
 
+  \section{Tristate Buffer}
   \begin{frame} [fragile] {Tristate buffer}
     \begin{columns}
       \column{0.5\textwidth}
@@ -369,13 +374,13 @@
   state_v := state_cs;
   case state_cs is
     when "00" =>
-      -- phase 1
+      -- state 1
       state_v := "01";
     when "01" =>
-      -- phase 2
+      -- state 2
       state_v := "10";
     when "10" =>
-      -- phase 3
+      -- state 3
       state_v := "00";
     when others =>
       -- default case
@@ -384,7 +389,7 @@
     \end{lstlisting}
   \end{frame}
 
-  \sectionframe{Was passiert nun in den Einzelnen States?}
+  \sectionframe{Die einzelnen States schaut ihr euch so an :)}
 
   \begin{frame} {State 1}
     \begin{block} {State 1}
@@ -426,6 +431,40 @@
         \item state $\leftarrow$ 0
       \end{itemize}
     \end{block}
+  \end{frame}
+
+  \begin{frame} {Aufbau Der Schaltung}
+    \begin{center}
+      \begin{tikzpicture} [    
+        auto,
+        block/.style={
+        rectangle,
+        draw=blue,
+        thick,
+        fill=blue!20,
+        text width=5em,
+        text centered,
+        align=center,
+        rounded corners,
+        minimum height=2em
+        }]
+  
+        \node[block, text centered,text width = 0.25\textwidth, minimum height=5cm, draw] (stm) {STM32};
+      
+        \node[block, text width=3cm] (controller) [right=of stm, xshift=5cm, yshift=2cm] {Controller};
+        \node[block, text centered,text width = 0.25\textwidth, minimum height = 3 cm, draw] (computer) [below=of controller]{sqrtComputer};
+        \node[draw,thick,rounded corners, draw=blue,fit=(controller) (computer)] {};
+        
+        \path[every node/.style={sloped,anchor=south,auto=false}]
+          (stm) edge node [above] {REQ, ACK} node [below] {RD/nWR, DATA} (controller)
+  
+          (controller) edge [transform canvas={xshift=-1cm}]  node {req} (computer)            
+          (controller) edge [transform canvas={xshift=-.3cm}] node {fx} (computer)
+          (controller) edge [transform canvas={xshift=.3cm}]  node {x} (computer)
+          (controller) edge [transform canvas={xshift=1cm}]  node {rdy} (computer);
+  
+      \end{tikzpicture}
+    \end{center}
   \end{frame}
 
 \end{document}
